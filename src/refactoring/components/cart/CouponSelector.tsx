@@ -34,14 +34,17 @@ const CouponSelectOptions = ({
       className="w-full p-2 border rounded mb-2"
     >
       <option value="">쿠폰 선택</option>
-      {coupons.map((coupon, index) => (
-        <option key={coupon.code} value={index}>
-          {coupon.name} -{" "}
-          {coupon.discountType === "amount"
-            ? `${coupon.discountValue}원`
-            : `${coupon.discountValue}%`}
-        </option>
-      ))}
+      {coupons.map((coupon, index) => {
+        const { code, name, discountType, discountValue } = coupon;
+        return (
+          <option key={code} value={index}>
+            {name} -{" "}
+            {discountType === "amount"
+              ? `${discountValue}원`
+              : `${discountValue}%`}
+          </option>
+        );
+      })}
     </select>
   );
 };

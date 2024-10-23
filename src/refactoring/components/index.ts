@@ -1,4 +1,6 @@
 // 레이아웃
+export { default as Layout } from "../components/layout/Layout.tsx";
+export { default as Header } from "../components/layout/Header.tsx";
 export { default as Container } from "../components/layout/Container.tsx";
 export { default as SectionBox } from "../components/layout/SectionBox.tsx";
 export { default as SubSection } from "../components/layout/SubSection.tsx";

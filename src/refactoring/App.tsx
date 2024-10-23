@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { CartPage } from "./pages/CartPage.tsx";
 import { AdminPage } from "./pages/AdminPage.tsx";
 import { Coupon, Product } from "../types.ts";
 import { useCoupons, useProducts } from "./hooks";
 import useAdmin from "./hooks/useAdmin.ts";
-import Layout from "./components/layout/Layout.tsx";
-import Header from "./components/layout/Header.tsx";
+import { Layout, Header } from "./components/index.ts";
 
 const initialProducts: Product[] = [
   {
