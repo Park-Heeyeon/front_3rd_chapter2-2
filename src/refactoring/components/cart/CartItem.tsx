@@ -1,6 +1,5 @@
 import { CartItem as CartItemType } from "../../../types";
 import { getAppliedDiscount } from "../../hooks/utils/cartUtils";
-import Button from "../Button";
 
 interface Props {
   cartItem: CartItemType;
@@ -33,22 +32,25 @@ const CartItem = ({ cartItem, updateQuantity, removeFromCart }: Props) => {
         </span>
       </div>
       <div>
-        <Button
-          label="-"
+        <button
           className="bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400"
           onClick={() => updateQuantity(id, quantity - 1)}
-        />
+        >
+          -
+        </button>
 
-        <Button
-          label="+"
+        <button
           className="bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400"
           onClick={() => updateQuantity(id, quantity + 1)}
-        />
-        <Button
-          label="삭제"
+        >
+          +
+        </button>
+        <button
           className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
           onClick={() => removeFromCart(id)}
-        />
+        >
+          삭제
+        </button>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { Coupon } from "../../../types";
 import { useCouponContext } from "../../contexts/CouponProvider";
-import Button from "../Button";
 
 interface Props {
   onCouponAdd: (newCoupon: Coupon) => void;
@@ -66,11 +65,12 @@ const NewCouponForm = ({ onCouponAdd }: Props) => {
           className="w-full p-2 border rounded"
         />
       </div>
-      <Button
-        label="쿠폰 추가"
+      <button
         className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
         onClick={handleAddCoupon}
-      />
+      >
+        쿠폰 추가
+      </button>
     </div>
   );
 };
