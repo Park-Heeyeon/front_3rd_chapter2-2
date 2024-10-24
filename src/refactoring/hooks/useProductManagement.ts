@@ -31,8 +31,8 @@ const useProductManagement = () => {
     setEditingProduct(product);
   };
 
-  const toggleShowNewProductForm = (isShowNewProductForm: boolean) => {
-    setShowNewProductForm(isShowNewProductForm);
+  const toggleShowNewProductForm = (isShowForm: boolean) => {
+    setShowNewProductForm(isShowForm);
   };
 
   const updateNewProduct = (updatedProduct: Omit<Product, "id">) => {

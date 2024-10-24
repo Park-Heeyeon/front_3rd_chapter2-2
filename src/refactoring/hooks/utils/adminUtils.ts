@@ -1,29 +1,36 @@
 import { Discount, Product } from "../../../types";
 
-/**
- * 주어진 제품 ID에 해당하는 제품을 찾는 함수
- * @param products - 제품 배열
- * @param productId - 찾고자 하는 제품의 ID
- * @returns - 찾은 제품 또는 undefined
- */
-export const findUpdatedProduct = (products: Product[], productId: string) => {
+export const findProductById = (products: Product[], productId: string) => {
   return products.find((product) => product.id === productId);
 };
 
-/**
- * 제품의 속성을 업데이트하는 함수
- * @param products - 제품 배열
- * @param productId - 업데이트할 제품의 ID
- * @param updates - 업데이트할 속성의 객체
- * @returns - 업데이트된 제품 또는 undefined
- */
-export const updateProductAttr = (
+export const updateProductName = (
+  editingProduct: Product | null,
+  productId: string,
+  newName: string
+) => {
+  return editingProduct?.id === productId
+    ? { ...editingProduct, name: newName }
+    : undefined;
+};
+
+export const updateProductPrice = (
+  editingProduct: Product | null,
+  productId: string,
+  newPrice: number
+) => {
+  return editingProduct?.id === productId
+    ? { ...editingProduct, price: newPrice }
+    : undefined;
+};
+
+export const updateProductStock = (
   products: Product[],
   productId: string,
-  updates: Partial<Product>
-): Product | undefined => {
-  const updatedProduct = findUpdatedProduct(products, productId);
-  return updatedProduct ? { ...updatedProduct, ...updates } : undefined;
+  newStock: number
+) => {
+  const productToUpdate = products.find((p) => p.id === productId);
+  return productToUpdate ? { ...productToUpdate, stock: newStock } : undefined;
 };
 
 /**
@@ -33,15 +40,13 @@ export const updateProductAttr = (
  * @returns - 업데이트된 제품 또는 undefined
  */
 export const addDiscountToProduct = (
-  product: Product | undefined,
+  product: Product,
   newDiscount: Discount
 ) => {
-  return product
-    ? {
-        ...product,
-        discounts: [...product.discounts, newDiscount],
-      }
-    : undefined;
+  return {
+    ...product,
+    discounts: [...product.discounts, newDiscount],
+  };
 };
 
 /**
@@ -50,14 +55,9 @@ export const addDiscountToProduct = (
  * @param index - 제거할 할인 인덱스
  * @returns - 업데이트된 제품 또는 undefined
  */
-export const removeDiscountFromProduct = (
-  product: Product | undefined,
-  index: number
-) => {
-  return product
-    ? {
-        ...product,
-        discounts: product.discounts.filter((_, i) => i !== index),
-      }
-    : undefined;
+export const removeDiscountFromProduct = (product: Product, index: number) => {
+  return {
+    ...product,
+    discounts: product.discounts.filter((_, i) => i !== index),
+  };
 };

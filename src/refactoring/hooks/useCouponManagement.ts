@@ -1,11 +1,7 @@
 import { useState } from "react";
-import { Coupon, Discount } from "../../types";
+import { Coupon } from "../../types";
 
 const useCouponManagement = () => {
-  const [newDiscount, setNewDiscount] = useState<Discount>({
-    quantity: 0,
-    rate: 0,
-  });
   const [newCoupon, setNewCoupon] = useState<Coupon>({
     name: "",
     code: "",
@@ -13,17 +9,11 @@ const useCouponManagement = () => {
     discountValue: 0,
   });
 
-  const updateNewDiscount = (updatedNewDiscount: Discount) => {
-    setNewDiscount((prev) => ({ ...prev, ...updatedNewDiscount }));
-  };
-
-  const updateNewCoupon = (updatedNewCoupon: Coupon) => {
-    setNewCoupon((prev) => ({ ...prev, ...updatedNewCoupon }));
+  const updateNewCoupon = (newCoupon: Coupon) => {
+    setNewCoupon((prev) => ({ ...prev, ...newCoupon }));
   };
 
   return {
-    newDiscount,
-    updateNewDiscount,
     newCoupon,
     updateNewCoupon,
   };

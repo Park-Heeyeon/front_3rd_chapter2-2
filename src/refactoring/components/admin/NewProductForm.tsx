@@ -1,17 +1,13 @@
 import { Product } from "../../../types";
+import { useProductContext } from "../../contexts/ProductProvider";
 
 interface Props {
-  newProduct: Omit<Product, "id">;
-  updateNewProduct: (newProduct: Omit<Product, "id">) => void;
   onProductAdd: (newProduct: Product) => void;
-  toggleShowNewProductForm: (isShowForm: boolean) => void;
 }
-const NewProductForm = ({
-  newProduct,
-  updateNewProduct,
-  onProductAdd,
-  toggleShowNewProductForm,
-}: Props) => {
+const NewProductForm = ({ onProductAdd }: Props) => {
+  const { newProduct, updateNewProduct, toggleShowNewProductForm } =
+    useProductContext();
+
   const handleAddNewProduct = () => {
     const productWithId = { ...newProduct, id: Date.now().toString() };
     onProductAdd(productWithId);
@@ -23,6 +19,7 @@ const NewProductForm = ({
     });
     toggleShowNewProductForm(false);
   };
+
   return (
     <div className="bg-white p-4 rounded shadow mb-4">
       <h3 className="text-xl font-semibold mb-2">새 상품 추가</h3>

@@ -1,13 +1,14 @@
 import { Coupon } from "../../../types";
+import { useCouponContext } from "../../contexts/CouponProvider";
 import Button from "../Button";
 
 interface Props {
-  newCoupon: Coupon;
-  updateNewCoupon: (newCoupon: Coupon) => void;
   onCouponAdd: (newCoupon: Coupon) => void;
 }
 
-const NewCouponForm = ({ newCoupon, updateNewCoupon, onCouponAdd }: Props) => {
+const NewCouponForm = ({ onCouponAdd }: Props) => {
+  const { newCoupon, updateNewCoupon } = useCouponContext();
+
   const handleAddCoupon = () => {
     onCouponAdd(newCoupon);
     updateNewCoupon({
@@ -17,6 +18,7 @@ const NewCouponForm = ({ newCoupon, updateNewCoupon, onCouponAdd }: Props) => {
       discountValue: 0,
     });
   };
+
   return (
     <div className="space-y-2 mb-4">
       <input

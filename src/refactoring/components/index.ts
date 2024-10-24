@@ -12,3 +12,13 @@ export { default as CouponSelector } from "../components/cart/CouponSelector.tsx
 export { default as OrderSummary } from "../components/cart/OrderSummary.tsx";
 
 // 관리자 페이지 관련 컴포넌트
+export { default as ProductManagement } from "../components/admin/ProductManagement.tsx";
+export { default as CouponManagement } from "../components/admin/CouponManagement.tsx";
+export { default as NewProductForm } from "../components/admin/NewProductForm.tsx";
+export { default as NewCouponForm } from "../components/admin/NewCouponForm.tsx";
+export { default as TotalProductList } from "../components/admin/TotalProductList.tsx";
+export { default as ProductItem } from "../components/admin/ProductItem.tsx";
+export { default as ProductEditForm } from "../components/admin/ProductEditForm.tsx";
+export { default as DiscountInfo } from "../components/admin/DiscountInfo.tsx";
+export { default as DiscountInfoEditForm } from "../components/admin/DiscountInfoEditForm.tsx";
+export { default as CouponList } from "../components/admin/CouponList.tsx";
