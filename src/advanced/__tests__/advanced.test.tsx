@@ -1,9 +1,27 @@
 import { useState } from "react";
 import { describe, expect, test } from "vitest";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+  within,
+} from "@testing-library/react";
 import { CartPage } from "../../refactoring/pages/CartPage";
 import { AdminPage } from "../../refactoring/pages/AdminPage";
-import { Coupon, Product } from "../../types";
+import { Coupon, Discount, Product } from "../../types";
+import useAdmin from "../../refactoring/hooks/useAdmin";
+import useProductManagement from "../../refactoring/hooks/useProductManagement";
+import useCouponManagement from "../../refactoring/hooks/useCouponManagement";
+import useDiscountManagement from "../../refactoring/hooks/useDiscountManagement";
+import {
+  addDiscountToProduct,
+  removeDiscountFromProduct,
+  updateProductName,
+  updateProductPrice,
+  updateProductStock,
+} from "../../refactoring/hooks/utils/adminUtils";
 
 const mockProducts: Product[] = [
   {
@@ -261,13 +279,203 @@ describe("advanced > ", () => {
     });
   });
 
-  describe("자유롭게 작성해보세요.", () => {
-    test("새로운 유틸 함수를 만든 후에 테스트 코드를 작성해서 실행해보세요", () => {
-      expect(true).toBe(false);
+  describe("커스텀 훅 테스트.", () => {
+    describe("useAdmin >", () => {
+      const testIsAdmin: boolean = false;
+      test("관리자 상태를 변경할 수 있다.", () => {
+        const { result } = renderHook(() => useAdmin(testIsAdmin));
+
+        // 초기 상태 확인
+        expect(result.current.isAdmin).toBe(false);
+
+        // toggleAdmin 호출 후 상태 확인
+        act(() => {
+          result.current.toggleAdmin();
+        });
+        expect(result.current.isAdmin).toBe(true);
+
+        // toggleAdmin 재호출 후 상태 확인
+        act(() => {
+          result.current.toggleAdmin();
+        });
+        expect(result.current.isAdmin).toBe(false);
+      });
     });
 
-    test("새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요", () => {
-      expect(true).toBe(false);
+    describe("useProductManagement > ", () => {
+      test("상품의 세부 정보를 열고 닫는 기능이 동작해야 한다", () => {
+        const { result } = renderHook(() => useProductManagement());
+
+        act(() => {
+          result.current.toggleProductAccordion("1");
+        });
+        expect(result.current.openProductIds.has("1")).toBe(true);
+
+        act(() => {
+          result.current.toggleProductAccordion("1");
+        });
+        expect(result.current.openProductIds.has("1")).toBe(false);
+      });
+
+      test("새로운 상품 정보를 업데이트 할 수 있어야한다", () => {
+        const newProduct: Omit<Product, "id"> = {
+          name: "Product 1",
+          price: 100,
+          stock: 10,
+          discounts: [],
+        };
+        const { result } = renderHook(() => useProductManagement());
+
+        act(() => {
+          result.current.updateNewProduct(newProduct);
+        });
+        expect(result.current.newProduct).toEqual(newProduct);
+      });
+    });
+
+    describe("useCouponManagement > ", () => {
+      test("새로운 쿠폰 정보를 업데이트 할 수 있어야한다", () => {
+        const newCoupon: Coupon = {
+          name: "Coupon1",
+          code: "testAdvanced",
+          discountType: "amount",
+          discountValue: 5000,
+        };
+
+        const { result } = renderHook(() => useCouponManagement());
+
+        act(() => {
+          result.current.updateNewCoupon(newCoupon);
+        });
+        expect(result.current.newCoupon).toEqual(newCoupon);
+      });
+    });
+
+    describe("useDiscountManagement > ", () => {
+      test("새로운 할인 정보를 업데이트 할 수 있어야한다.", () => {
+        const newDiscount: Discount = {
+          quantity: 10,
+          rate: 20,
+        };
+
+        const { result } = renderHook(() => useDiscountManagement());
+
+        act(() => {
+          result.current.updateNewDiscount(newDiscount);
+        });
+        expect(result.current.newDiscount).toEqual(newDiscount);
+      });
+    });
+  });
+
+  describe("유틸 함수 테스트.", () => {
+    const testProduct: Product = {
+      id: "1",
+      name: "Test UpdateProduct",
+      price: 100,
+      stock: 10,
+      discounts: [{ quantity: 2, rate: 0.1 }],
+    };
+
+    describe("updateProductName >", () => {
+      test("상품 ID가 일치하면 이름을 업데이트해야 한다", () => {
+        const newName = "새로운 상품명";
+        const result = updateProductName(testProduct, "1", newName);
+
+        expect(result).toEqual({
+          ...testProduct,
+          name: newName,
+        });
+      });
+
+      test("상품 ID가 일치하지 않으면 undefined를 반환해야 한다", () => {
+        const result = updateProductName(testProduct, "999", "다른 이름");
+
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe("updateProductPrice >", () => {
+      test("상품 ID가 일치하면 가격을 업데이트해야 한다", () => {
+        const newPrice = 200;
+        const result = updateProductPrice(testProduct, "1", newPrice);
+
+        expect(result).toEqual({
+          ...testProduct,
+          price: newPrice,
+        });
+      });
+
+      test("상품 ID가 일치하지 않으면 undefined를 반환해야 한다", () => {
+        const newPrice = 200;
+        const result = updateProductPrice(testProduct, "999", newPrice);
+
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe("updateProductStock >", () => {
+      test("상품 ID가 일치하면 재고를 업데이트해야 한다.", () => {
+        const newStock = 5;
+        const result = updateProductStock(testProduct, "1", newStock);
+
+        expect(result).toEqual({
+          ...testProduct,
+          stock: newStock,
+        });
+      });
+
+      test("상품 ID가 일치하지 않으면 undefined를 반환해야 한다", () => {
+        const newStock = 200;
+        const result = updateProductPrice(testProduct, "999", newStock);
+
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe("addDiscountToProduct >", () => {
+      test("새로운 할인 항목을 추가해야한다.", () => {
+        const newDiscount: Discount = { quantity: 5, rate: 0.2 };
+        const updatedProduct = addDiscountToProduct(testProduct, newDiscount);
+
+        expect(updatedProduct).toEqual({
+          ...testProduct,
+          discounts: [
+            { quantity: 2, rate: 0.1 },
+            { quantity: 5, rate: 0.2 },
+          ],
+        });
+      });
+    });
+
+    describe("removeDiscountFromProduct >", () => {
+      test("특정 인덱스의 할인 항목을 제거해야 한다.", () => {
+        const updatedProduct = removeDiscountFromProduct(testProduct, 1);
+        expect(updatedProduct).toEqual({
+          ...testProduct,
+          discounts: [{ quantity: 2, rate: 0.1 }], // 인덱스 1의 할인 항목이 제거된 후
+        });
+      });
+
+      test("유효하지 않은 인덱스의 경우, 원래 제품을 반환해야 한다.", () => {
+        const updatedProduct = removeDiscountFromProduct(testProduct, 5); // 유효하지 않은 인덱스
+        expect(updatedProduct).toEqual(testProduct); // 원래 제품과 동일해야 함
+      });
+
+      test("빈 할인 목록의 경우, 제품이 그대로 반환되어야 한다.", () => {
+        const productWithoutDiscounts: Product = {
+          id: "2",
+          name: "Test No Discounts",
+          price: 150,
+          stock: 20,
+          discounts: [],
+        };
+        const updatedProduct = removeDiscountFromProduct(
+          productWithoutDiscounts,
+          0
+        );
+        expect(updatedProduct).toEqual(productWithoutDiscounts); // 원래 제품과 동일해야 함
+      });
     });
   });
 });

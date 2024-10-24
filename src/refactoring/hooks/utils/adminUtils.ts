@@ -25,12 +25,13 @@ export const updateProductPrice = (
 };
 
 export const updateProductStock = (
-  products: Product[],
+  editingProduct: Product | null,
   productId: string,
   newStock: number
 ) => {
-  const productToUpdate = products.find((p) => p.id === productId);
-  return productToUpdate ? { ...productToUpdate, stock: newStock } : undefined;
+  return editingProduct?.id === productId
+    ? { ...editingProduct, stock: newStock }
+    : undefined;
 };
 
 /**

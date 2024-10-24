@@ -39,7 +39,11 @@ const ProductEditForm = ({ products, product, onProductUpdate }: Props) => {
   };
 
   const handleStockUpdate = (productId: string, newStock: number) => {
-    const updatedProduct = updateProductStock([product], productId, newStock);
+    const updatedProduct = updateProductStock(
+      editingProduct,
+      productId,
+      newStock
+    );
     if (updatedProduct) {
       onProductUpdate(updatedProduct);
       updateEditingProduct(updatedProduct);
